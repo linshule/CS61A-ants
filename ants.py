@@ -176,6 +176,9 @@ class HarvesterAnt(Ant):
 class ThrowerAnt(Ant):
     """ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
 
+    min_range = 0
+    max_range = float('inf')
+
     name = 'Thrower'
     implemented = True
     damage = 1
@@ -191,10 +194,10 @@ class ThrowerAnt(Ant):
         # BEGIN Problem 3 and 4
 
         curPlace = self.place
-        while curPlace.bees==[]:
+        distance = 0
+        while curPlace!=None and (curPlace.bees==[] or not self.min_range<=distance<=self.max_range):
             curPlace=curPlace.entrance
-            if curPlace==None:
-                break
+            distance+=1
 
         
         if curPlace==None:
@@ -235,7 +238,8 @@ class ShortThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    max_range=3
     # END Problem 4
 
 
@@ -246,7 +250,8 @@ class LongThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    min_range=5
     # END Problem 4
 
 
