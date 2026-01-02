@@ -525,6 +525,12 @@ class Bee(Insect):
     damage = 1
     # OVERRIDE CLASS ATTRIBUTES HERE
 
+    def __init__(self, health, place=None):
+        super().__init__(health, place)
+        self.slow_turns = 0
+        self.scary_turns = 0
+        self.has_been_scared = False
+
     def sting(self, ant):
         """Attack an ANT, reducing its health by 1."""
         ant.reduce_health(self.damage)
@@ -549,6 +555,23 @@ class Bee(Insect):
         """
         destination = self.place.exit
 
+        is_slow = self.slow_turns > 0
+        is_scared = self.scary_turns > 0
+
+        if is_slow and gamestate.time % 2 != 0:
+            self.slow_turns -= 1
+            return
+        
+        if is_scared:
+            destination = self.place.entrance
+            if destination.is_hive:
+                destination = None
+            self.scary_turns -= 1
+        else:
+            destination = self.place.exit
+        
+        if is_slow:
+            self.slow_turns -= 1
         # Extra credit: Special handling for bee direction
         if self.blocked():
             self.sting(self.place.ant)
@@ -567,6 +590,7 @@ class Bee(Insect):
         """Slow the bee for a further LENGTH turns."""
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        self.slow_turns += length
         # END Problem EC
 
     def scare(self, length):
@@ -576,6 +600,9 @@ class Bee(Insect):
         """
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if not self.has_been_scared:
+            self.scary_turns = length
+            self.has_been_scared = True
         # END Problem EC
 
 
@@ -612,7 +639,7 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     food_cost = 4
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
@@ -626,12 +653,14 @@ class ScaryThrower(ThrowerAnt):
     name = 'Scary'
     food_cost = 6
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
+        if target:
+            target.scare(2)
         # END Problem EC
 
 
