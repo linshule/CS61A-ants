@@ -54,6 +54,7 @@ class Insect:
 
     damage = 0
     # ADD CLASS ATTRIBUTES HERE
+    is_waterproof=True
 
     def __init__(self, health, place=None):
         """Create an Insect with a health amount and a starting PLACE."""
@@ -106,6 +107,7 @@ class Ant(Insect):
     implemented = False  # Only implemented Ant classes should be instantiated
     food_cost = 0
     is_container = False
+    is_waterproof=False
     # ADD CLASS ATTRIBUTES HERE
 
     def __init__(self, health=1):
@@ -419,6 +421,9 @@ class Water(Place):
         its health to 0."""
         # BEGIN Problem 10
         "*** YOUR CODE HERE ***"
+        super().add_insect(insect)
+        if insect.is_waterproof==False:
+            insect.reduce_health(insect.health)
         # END Problem 10
 
 # BEGIN Problem 11
